@@ -1,4 +1,5 @@
 # Verificar se há atualizações do Windows
+Install-Module -Name PSWindowsUpdate -Force
 $updates = Get-WUInstall | Where-Object {$_.State -eq "Available"}
 
 if ($updates) {
