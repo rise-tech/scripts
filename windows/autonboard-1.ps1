@@ -1,12 +1,29 @@
+# Variáveis obrigatórias
+
+Param (
+    [Parameter (Mandatory = $true)]
+    [string] $userName
+)
+
+Param (
+    [Parameter (Mandatory = $true)]
+    [string] $preyToken
+)
+
+Param (
+    [Parameter (Mandatory = $true)]
+    [string] $JumpCloudConnectKey
+)
+
 # Declaração de variáveis
 
 $teamviewerURL = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe"
 $googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
 $googleChromeURL = "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B65DEC826-D254-2DE3-F93A-A6C0BB8157FB%7D%26lang%3Dpt-PT%26browser%3D5%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe"
 $firefoxURL = "https://cdn.stubdownloader.services.mozilla.com/builds/firefox-stub/pt-PT/win/7a4edbc2923ced0a26263bdd4d8cc55b27e233280a52e1bc10976a9258f282c1/Firefox%20Installer.exe"
-$preyURL = "https://prey.io/dl/"
+$preyURL = "https://prey.io/dl/" + $preyToken
 $slackURL = "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.38.115/SlackSetup.exe"
-$wingetURL = "https://cdn.winget.microsoft.com/cache/source.msix"
+$wingetURL = "https://github.com/rise-tech/scripts/raw/master/source.msix"
 
 $tempPath = 'C:\Windows\Temp\'
 
@@ -35,7 +52,9 @@ if ($updates) {
 }
 
 # Remover OneDrive
-winget uninstall Microsoft.
+Write-Host "Removendo OneDrive..."
+winget uninstall Microsoft. -Wait
+Write-Host "Remoção concluída."
 
 # Criar um novo usuário
 Write-Host "Criando o usuário..."
@@ -58,10 +77,10 @@ $userSID = (Get-WMIObject Win32_UserAccount -Filter "Name='$userName'").SID
 $HKLMPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList"
 New-ItemProperty -Path $HKLMPath -Name $userSID -Value $userName -PropertyType String -Force
 
-# Solicitar a API do Prey
-Write-Host "Digite/Cole a API do Prey:"
-$preyAPI = Read-Host
-$preyURL = $preyURL + $preyAPI
+# Solicitar o token do Prey
+Write-Host "Digite/Cole o token do Prey:"
+$preyToken = Read-Host
+$preyURL = $preyURL + $preyToken
 
 # Baixar softwares
 Function DownloadInstallers() {
@@ -177,3 +196,6 @@ Out-File -FilePath $autonboardBATPath -InputObject $autonboardBATContent -Encodi
 Write-Host "Reiniciando o computador..."
 # Restart-Computer -Force
 
+Invoke-Expression; 
+Invoke-RestMethod -Method Get -URI https://raw.githubusercontent.com/TheJumpCloud/support/master/scripts/windows/autonboard_2.ps1 -OutFile autonboard_2.ps1
+Invoke-Expression; ./autonboard_2.ps1 -JumpCloudConnectKey $JumpCloudConnectKey
