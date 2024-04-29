@@ -10,7 +10,6 @@ Param (
 #--- Modify Below This Line At Your Own Risk ------------------------------
 
 # JumpCloud Agent Installation Variables
-$TempPath = 'C:\Windows\Temp\'
 $AGENT_PATH = Join-Path ${env:ProgramFiles} "JumpCloud"
 $AGENT_BINARY_NAME = "jumpcloud-agent.exe"
 $AGENT_INSTALLER_URL = "https://cdn02.jumpcloud.com/production/jcagent-msi-signed.msi"
