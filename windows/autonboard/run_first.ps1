@@ -12,7 +12,7 @@ Param (
 
 $teamviewerURL = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe"
 $googleChromeURL = "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B65DEC826-D254-2DE3-F93A-A6C0BB8157FB%7D%26lang%3Dpt-PT%26browser%3D5%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe"
-$firefoxURL = "https://cdn.stubdownloader.services.mozilla.com/builds/firefox-stub/pt-PT/win/7a4edbc2923ced0a26263bdd4d8cc55b27e233280a52e1bc10976a9258f282c1/Firefox%20Installer.exe"
+$firefoxURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/source.msix"
 $wingetURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/source.msix"
 $winrarURL = "https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-700br.exe"
 $googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
@@ -92,6 +92,7 @@ Function DownloadInstallers() {
     (New-Object System.Net.WebClient).DownloadFile("${slackURL}", "${slackPath}")
     (New-Object System.Net.WebClient).DownloadFile("${wingetURL}", "${wingetPath}")
     (New-Object System.Net.WebClient).DownloadFile("${winrarURL}", "${winrarPath}")
+    Write-Host "Todos os Softwares foram baixados"
 }
 
 # Instalar softwares
@@ -113,7 +114,7 @@ Function InstallSoftwares(){
     Write-Host "Firefox instalado."
 
     # Winrar
-    Start-Process -FilePath $winrarPath -PassThru -NoNewWindow -Wait
+    Start-Process -FilePath $winrarPath -PassThru -NoNewWindow -ArgumentList "/S" -Wait
     Write-Host "Winrar instalado."
 }
 
@@ -138,7 +139,7 @@ if (!(Test-Path -Path $startupFolder)) {
     New-Item -Path $startupFolder -ItemType Directory
 }
 
-$run = "cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile OnUser.ps1 | Invoke-Expression; ./OnUser.ps1 -JumpCloudConnectKey $jumpCloudConnectKey"
+$run = "cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile OnUser.ps1 | Invoke-Expression; ./OnUser.ps1 -JumpCloudConnectKey "$jumpCloudConnectKey""
 
 $autonboardBATContent = @"
 runas /noprofile /user:user "powershell.exe -noexit -command $run"
