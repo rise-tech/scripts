@@ -6,7 +6,7 @@
 Param (
     [Parameter (Mandatory = $true)]
     [string] $UserName,
-    [string] $JumpCloudConnectKey
+    [string] $JumpCloudConnectKey,
     [string] $PreyToken
 )
 
