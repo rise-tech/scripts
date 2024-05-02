@@ -1,3 +1,7 @@
+###########################
+# Declaração de variáveis #
+###########################
+
 # Recebe variáveis obrigatórias
 
 Param (
@@ -5,14 +9,12 @@ Param (
     [string] $JumpCloudConnectKey
 )
 
-$googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
-$preyURL = "https://prey.io/dl/" + $PreyToken
-$slackURL = "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.38.115/SlackSetup.exe"
-
 # $documentsFolder = $env:USERPROFILE + "\Meus Documentos"
 # $downloadsFolder = $env:USERPROFILE + "\Downloads"
 # $imagesFolder = $env:USERPROFILE + "\Minhas Imagens"
 
+
+# Baixar softwares
 Function DownloadInstallers() {
     (New-Object System.Net.WebClient).DownloadFile("${googleDriveURL}", "${googleDrivePath}")
     Write-Host "Google Drive baixado."
@@ -99,7 +101,9 @@ Function InstallJumpCloud() {
     }
 }
 
-### Início ###
+######################
+# Início da execução #
+######################
 
 # Remover OneDrive
 Write-Host "Removendo OneDrive..."
@@ -112,6 +116,7 @@ DownloadInstallers -Wait
 
 Write-Host "Instalando softwares..."
 InstallSoftwares
+InstallJumpCloud
 
 <#
 Write-Host "Continue apenas se:"

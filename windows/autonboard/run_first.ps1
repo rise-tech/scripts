@@ -1,20 +1,29 @@
-# Variáveis obrigatórias
+###########################
+# Declaração de variáveis #
+###########################
+
+# Variáveis obrigatórias #
 Param (
     [Parameter (Mandatory = $true)]
     [string] $UserName,
     [string] $JumpCloudConnectKey
+    [string] $PreyToken
 )
 
-# Declaração de variáveis
 $teamviewerURL = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe"
 $googleChromeURL = "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B65DEC826-D254-2DE3-F93A-A6C0BB8157FB%7D%26lang%3Dpt-PT%26browser%3D5%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe"
 $firefoxURL = "https://cdn.stubdownloader.services.mozilla.com/builds/firefox-stub/pt-PT/win/7a4edbc2923ced0a26263bdd4d8cc55b27e233280a52e1bc10976a9258f282c1/Firefox%20Installer.exe"
-$wingetURL = "https://github.com/rise-tech/scripts/raw/master/source.msix"
+$wingetURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/source.msix"
 $winrarURL = "https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-700br.exe"
+$googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
+$preyURL = "https://prey.io/dl/" + $PreyToken
+$slackURL = "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.38.115/SlackSetup.exe"
 
+# Padronizar variáveis
 $userName = $UserName.ToLower()
 $jumpCloudConnectKey = $JumpCloudConnectKey
 
+# Locais onde os downloads serão armazenados + nome do arquivo
 $teamviewerPath = $env:TEMP + "\teamviewer.exe"
 $googleChromePath = $env:TEMP + "\chrome.exe"
 $firefoxPath = $env:TEMP + "\firefox.exe"
@@ -24,11 +33,17 @@ $googleDrivePath = $env:TEMP + "\drive.exe"
 $preyPath = $env:TEMP + "\prey.exe"
 $slackPath = $env:TEMP + "\slack.exe"
 
+# Local da pasta padrão de usuário e do novo usuário
 $sourceProfilePath = "C:\Users\Default"
 $targetProfilePath = "C:\Users\$userName"
 
+# Configuração dos paths para a criação do arquivo .bat para auto-inicializar no logon do usuário
 $startupFolder = "C:\Users\$userName\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
 $autonboardBATPath = "$startupFolder\autonboard.bat"
+
+######################
+# Início da execução #
+######################
 
 # Verificar se há atualizações do Windows
 Install-Module -Name PSWindowsUpdate -Force
@@ -45,8 +60,8 @@ if ($updates) {
 
 # Criar um novo usuário
 Write-Host "Criando o usuário..."
-$userName = Read-Host "Nome de usuário"
-$userPassword = Read-Host "Senha" -AsSecureString
+# $userName = Read-Host "Nome de usuário"
+$userPassword = Read-Host "Digite a senha do usuário" -AsSecureString
 
 New-LocalUser -Name $userName -Password $userPassword
 
@@ -62,10 +77,10 @@ Copy-Item -Path $sourceProfilePath -Destination $targetProfilePath -Exclude "App
 # $HKLMPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList"
 # New-ItemProperty -Path $HKLMPath -Name $userSID -Value $userName -PropertyType String -Force
 
-# Solicita o token do Prey
-Write-Host "Digite/Cole o token do Prey:"
-$preyToken = Read-Host
-$preyURL = $preyURL + $preyToken
+# # Solicita o token do Prey
+# Write-Host "Digite/Cole o token do Prey:"
+# $preyToken = Read-Host
+# $preyURL = $preyURL + $preyToken
 
 # Baixar softwares
 Function DownloadInstallers() {
@@ -123,7 +138,7 @@ if (!(Test-Path -Path $startupFolder)) {
     New-Item -Path $startupFolder -ItemType Directory
 }
 
-$run = "cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile on_user.ps1 | Invoke-Expression; ./on_user.ps1 -JumpCloudConnectKey $jumpCloudConnectKey"
+$run = "cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile OnUser.ps1 | Invoke-Expression; ./OnUser.ps1 -JumpCloudConnectKey $jumpCloudConnectKey"
 
 $autonboardBATContent = @"
 runas /noprofile /user:user "powershell.exe -noexit -command $run"
