@@ -1,4 +1,4 @@
-###########################
+﻿###########################
 # Declaração de variáveis #
 ###########################
 
@@ -46,7 +46,7 @@ $autonboardBATPath = "$startupFolder\autonboard.bat"
 ######################
 
 # Verificar se há atualizações do Windows
-Install-Module -Name PSWindowsUpdate -Force
+Install-Module -Name PSWindowsUpdate -Force 
 $updates = Get-WUInstall | Where-Object {$_.State -eq "Available"}
 
 if ($updates) {
@@ -98,7 +98,7 @@ Function DownloadInstallers() {
 # Instalar softwares
 Function InstallSoftwares(){
     # Winget
-    Add-AppxPackage -Path $wingetPath -wait
+    Add-AppxPackage -Path $wingetPath -Wait
     Write-Host "Winget instalado."
 
     # TeamViewer
