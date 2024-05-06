@@ -139,7 +139,7 @@ if (!(Test-Path -Path $startupFolder)) {
     New-Item -Path $startupFolder -ItemType Directory
 }
 
-$run = "cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile OnUser.ps1 | Invoke-Expression; ./OnUser.ps1 -JumpCloudConnectKey "$jumpCloudConnectKey""
+$run = '''cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile OnUser.ps1 | Invoke-Expression; ./OnUser.ps1 -JumpCloudConnectKey "''' + $jumpCloudConnectKey + '''"'''
 
 $autonboardBATContent = @"
 runas /noprofile /user:user "powershell.exe -noexit -command $run"
