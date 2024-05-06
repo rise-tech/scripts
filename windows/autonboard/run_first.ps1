@@ -10,14 +10,14 @@ Param (
     [string] $PreyToken
 )
 
-$teamviewerURL = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe"
-$googleChromeURL = "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B65DEC826-D254-2DE3-F93A-A6C0BB8157FB%7D%26lang%3Dpt-PT%26browser%3D5%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe"
-$firefoxURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/source.msix"
+$teamviewerURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/teamviewer.exe"
+$googleChromeURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/chrome.exe"
+$firefoxURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/firefox.exe"
 $wingetURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/source.msix"
-$winrarURL = "https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-700br.exe"
-$googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
-$preyURL = "https://prey.io/dl/" + $PreyToken
-$slackURL = "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.38.115/SlackSetup.exe"
+$winrarURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/winrar.exe"
+$googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe" # Mantido link direto, devido arquivo ultrapassar 100MB
+$preyURL = "https://prey.io/dl/" + $PreyToken # Mantido link direto para que receba o token e gere o instalador
+$slackURL = "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.38.115/SlackSetup.exe" # Mantido link direto, ddevido arquivo ultrapassar 100MB
 
 # Padronizar variáveis
 $userName = $UserName.ToLower()
@@ -106,11 +106,11 @@ Function InstallSoftwares(){
     Write-Host "TeamViewer instalado."
 
     # Chrome
-    Start-Process -FilePath $googleChromePath -PassThru -NoNewWindow -Wait
+    Start-Process -FilePath $googleChromePath -PassThru -NoNewWindow -ArgumentList "/S" -Wait
     Write-Host "Chrome instalado."
 
     # Firefox
-    Start-Process -FilePath $firefoxPath -PassThru -NoNewWindow -Wait
+    Start-Process -FilePath $firefoxPath -PassThru -NoNewWindow -ArgumentList "/S" -Wait
     Write-Host "Firefox instalado."
 
     # Winrar
