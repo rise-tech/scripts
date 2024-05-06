@@ -12,8 +12,8 @@ Param (
 
 $teamviewerURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/teamviewer.exe"
 $googleChromeURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/chrome.exe"
-$firefoxURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/firefox.exe"
-$wingetURL = "https://github.com/rise-tech/scripts/raw/master/windows/misc/source.msix"
+$firefoxURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/firefox.exe"
+$wingetURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/source.msix"
 $winrarURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/winrar.exe"
 $googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe" # Mantido link direto, devido arquivo ultrapassar 100MB
 $preyURL = "https://prey.io/dl/" + $PreyToken # Mantido link direto para que receba o token e gere o instalador
@@ -98,7 +98,7 @@ Function DownloadInstallers() {
 # Instalar softwares
 Function InstallSoftwares(){
     # Winget
-    Add-AppxPackage -Path $wingetPath -Wait
+    Add-AppxPackage -Path $wingetPath
     Write-Host "Winget instalado."
 
     # TeamViewer
