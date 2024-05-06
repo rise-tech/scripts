@@ -13,6 +13,8 @@ Param (
 # $downloadsFolder = $env:USERPROFILE + "\Downloads"
 # $imagesFolder = $env:USERPROFILE + "\Minhas Imagens"
 
+# Remove OneDrive
+winget uninstall Microsoft.OneDrive
 
 # Baixar softwares
 Function DownloadInstallers() {

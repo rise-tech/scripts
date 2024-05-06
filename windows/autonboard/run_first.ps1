@@ -17,7 +17,7 @@ $wingetURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/sour
 $winrarURL = "https://github.com/rise-tech/scripts/raw/master/windows/utils/winrar.exe"
 $googleDriveURL = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe" # Mantido link direto, devido arquivo ultrapassar 100MB
 $preyURL = "https://prey.io/dl/" + $PreyToken # Mantido link direto para que receba o token e gere o instalador
-$slackURL = "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.38.115/SlackSetup.exe" # Mantido link direto, ddevido arquivo ultrapassar 100MB
+$slackURL = "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.38.115/SlackSetup.exe" # Mantido link direto, devido arquivo ultrapassar 100MB
 
 # Padronizar variáveis
 $userName = $UserName.ToLower()
@@ -34,12 +34,11 @@ $preyPath = $env:TEMP + "\prey.exe"
 $slackPath = $env:TEMP + "\slack.exe"
 
 # Local da pasta padrão de usuário e do novo usuário
-$sourceProfilePath = "C:\Users\Default"
-$targetProfilePath = "C:\Users\$userName"
+# $sourceProfilePath = "C:\Users\Default"
+# $targetProfilePath = "C:\Users\$userName"
 
-# Configuração dos paths para a criação do arquivo .bat para auto-inicializar no logon do usuário
-$startupFolder = "C:\Users\$userName\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
-$autonboardBATPath = "$startupFolder\autonboard.bat"
+# Local para salvar o arquivo necessário para rodar logado no usuário
+$autonboardBATPath = "C:\autonboard.bat"
 
 ######################
 # Início da execução #
@@ -68,9 +67,9 @@ New-LocalUser -Name $userName -Password $userPassword
 # Adicionar o novo usuário ao grupo de Usuários
 Add-LocalGroupMember -Group Usuários -Member $userName
 
-# Copiar o perfil do usuário padrão
-New-Item -Path $targetProfilePath -ItemType Directory
-Copy-Item -Path $sourceProfilePath -Destination $targetProfilePath -Exclude "AppData\Local\Microsoft\Windows\Shell\Roaming", "AppData\Roaming\Microsoft\Windows\StartMenu"
+# # Copiar o perfil do usuário padrão
+# New-Item -Path $targetProfilePath -ItemType Directory
+# Copy-Item -Path $sourceProfilePath -Destination $targetProfilePath -Exclude "AppData\Local\Microsoft\Windows\Shell\Roaming", "AppData\Roaming\Microsoft\Windows\StartMenu"
 
 # # Atualizar o registro do Windows
 # $userSID = (Get-WMIObject Win32_UserAccount -Filter "Name='$userName'").SID
@@ -132,14 +131,7 @@ Rename-Computer -NewName $userName.ToUpper()
 winget uninstall Microsoft.OneDrive
 
 # Criar o script on_user_script.bat
-
-# Verifique se a pasta Startup já existe
-if (!(Test-Path -Path $startupFolder)) {
-    # Crie a pasta Startup
-    New-Item -Path $startupFolder -ItemType Directory
-}
-
-$run = '''cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile OnUser.ps1 | Invoke-Expression; ./OnUser.ps1 -JumpCloudConnectKey "''' + $jumpCloudConnectKey + '''"'''
+$run = "cd $env:temp | Invoke-Expression; Invoke-RestMethod -Method Get -URI https://github.com/rise-tech/scripts/raw/master/windows/on_user.ps1 -OutFile OnUser.ps1 | Invoke-Expression; ./OnUser.ps1 -JumpCloudConnectKey $jumpCloudConnectKey"
 
 $autonboardBATContent = @"
 runas /noprofile /user:user "powershell.exe -noexit -command $run"
